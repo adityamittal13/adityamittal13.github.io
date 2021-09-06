@@ -7,33 +7,142 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Outsiide</title>
+		<title>Outsiide Form</title>
 		<!-- LINKS -->
 		<link rel="stylesheet" href="styles.css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
 	</head>
 
-	<body>
-
-		<div>
-			<h2 class="project-title"><a href="./index.html">Outsiide</a></h2>
-		</div>
-
-
-		<center style="background-color: #88c0d0; border-radius: 5px;">
-			<div id="mapdiv" class="mapdiv" style="display: inline-block">
-
+	<body class="background">
+		<div class="container">
+			<div class="row">
+				<div class="col-6">
+					<h2><a href="./index.html" class="project-title">Outsiide</a></h2>
+					<br>
+				</div>
+				<div class="col-6">
+					<h2 class="project-title">New Event</h2>
+				</div>
 			</div>
-		</center>
-		<center>
-			<a href="./form.html">
-				<button class="form_button" style="width: 35%" onclick="window.location.href='./form.html'">Add a Location!</button>
-			</a>
-		</center>
+			<div class="row justify-content-between">
+				<div class="col-6 float-start">
+					<center>
+						<div id="mapdiv" class="mapdiv" style="display: inline-block; width: 100%; height: 100%;">
 
+						</div>
+						<p>Event Location</p>
+					</center>
+				</div>
+				<div class="form_container col-4" style="display: inline-block; padding: 0px 0px 0px 2px">
+					<form id="newEventForm" action="/~/Outdoorsy/open/markers" method="POST">
+						<div class="row" action="?action=save" method="post">
+							<!--<div class="col-25">-->
+							<!--	<label for="fname">First Name</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="text" id="firstName" name="firstname" placeholder="First Name" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Last Name</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="text" id="lastName" name="lastname" placeholder="Last Name" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Last Name</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="date" id="plannedDate" name="plannedDate" placeholder="Date" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Last Name</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="time" id="time" name="time" placeholder="Time" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Address</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="number" step="0.0000001" id="latitude" name="latitude" placeholder="Latitude" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Address</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="number" step="0.0000001" id="longitude" name="longitude" placeholder="Longitude" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="country">Event Type</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<select id="eventType" name="event_type" required>
+									<option value="Hiking">Hiking</option>
+									<option value="Biking">Biking</option>
+									<option value="Running">Running</option>
+								</select>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="email">Email:</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="email" id="email" name="email" placeholder="Email" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="lname">Difficulty:</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<input type="text" id="difficulty" name="difficulty" placeholder="Difficulty" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<!--<div class="col-25">-->
+							<!--	<label for="subject">Description</label>-->
+							<!--</div>-->
+							<div class="col-75">
+								<textarea id="subject" name="description" placeholder="Description" style="height:200px" required></textarea>
+							</div>
+						</div>
+						<br>
+						<div class="row" style="width:25%">
+							<div class="col-75">
+								<button class="form_button" type="submit" value="save">Submit</button>
+							</div>
+						</div>
+						<input type='hidden' value='/~/Outdoorsy/index' name='redirecturl'>
+					</form>
+
+				</div>
+			</div>
+		</div>
 		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script>
-			document.getElementById('mapdiv').addEventListener('buttonClick', function (event){ console.log(event);}, false);
-		
 			async function grabData() {
 				const resp = await fetch('/~/Outdoorsy/open/markers?all=true')
 				const json = await resp.json();
@@ -44,7 +153,6 @@
 			var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
 
 			map.addLayer(vectorLayer);
-
 
 			async function update() {
 				var controls = {
@@ -69,7 +177,6 @@
 					feature.popup.destroy();
 					feature.popup = null;
 				}
-
 				map.addControl(controls['selector']);
 				controls['selector'].activate();
 				var data = await grabData();
@@ -91,42 +198,16 @@
 
 					var feature = new OpenLayers.Feature.Vector(
 						new OpenLayers.Geometry.Point(data[i].data.longitude, data[i].data.latitude)
-						.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()), { description: data[i].data.event_type.concat(' - ', String(data[i].data.difficulty), ' @ ', String(data[i].data.plannedDate), '-', String(data[i].data.time))});
+						.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()), { description: data[i].data.event_type.concat(' - ', String(data[i].data.difficulty), ' @ ', String(data[i].data.plannedDate), ' ', String(data[i].data.time)) });
 					vectorLayer.addFeatures(feature);
 
 					markerLayer.addMarker(new OpenLayers.Marker(lonLat));
 				}
 			}
 
-
-			// Center map based on user location
-			// function getLocation() {
-			// 	if (navigator.geolocation) {
-			// 		navigator.geolocation.getCurrentPosition(showPosition);
-			// 	} else {
-			// 		var curLonLat = new OpenLayers.LonLat(36.7783, -119.4179)
-			// 			.transform(
-			// 				new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-			// 				map.getProjectionObject() // to Spherical Mercator Projection
-			// 			);
-			// 		map.setCenter(curLonLat, 16);
-			// 	}
-			// }
-
-			// function showPosition(position) {
-			// 	var curLonLat = new OpenLayers.LonLat(position.coords.latitude, position.coords.longitude)
-			// 		.transform(
-			// 			new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-			// 			map.getProjectionObject() // to Spherical Mercator Projection
-			// 		);
-			// 	map.setCenter(curLonLat, 16);
-			// }
-
 			update();
-			//getLocation();
 		</script>
 		<script src="script.js"></script>
-
 	</body>
 
 	<footer>
