@@ -1,0 +1,136 @@
+<html>
+
+	<head>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Outsiide</title>
+		<!-- LINKS -->
+		<link rel="stylesheet" href="styles.css">
+	</head>
+
+	<body>
+
+		<div>
+			<h2 class="project-title"><a href="./index.html">Outsiide</a></h2>
+		</div>
+
+
+		<center style="background-color: #88c0d0; border-radius: 5px;">
+			<div id="mapdiv" class="mapdiv" style="display: inline-block">
+
+			</div>
+		</center>
+		<center>
+			<a href="./form.html">
+				<button class="form_button" style="width: 35%" onclick="window.location.href='./form.html'">Add a Location!</button>
+			</a>
+		</center>
+
+		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+		<script>
+			document.getElementById('mapdiv').addEventListener('buttonClick', function (event){ console.log(event);}, false);
+		
+			async function grabData() {
+				const resp = await fetch('/~/Outdoorsy/open/markers?all=true')
+				const json = await resp.json();
+				// console.log(json);
+				return json;
+			}
+			map = new OpenLayers.Map("mapdiv");
+			var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
+
+			map.addLayer(vectorLayer);
+
+
+			async function update() {
+				var controls = {
+					selector: new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup })
+				};
+
+				function createPopup(feature) {
+					feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+						feature.geometry.getBounds()
+						.getCenterLonLat(),
+						null,
+						'<div class="markerContent">' + feature.attributes.description + '</div>',
+						null,
+						true,
+						function () { controls['selector'].unselectAll(); }
+					);
+					//feature.popup.closeOnMove = true;
+					map.addPopup(feature.popup);
+				}
+
+				function destroyPopup(feature) {
+					feature.popup.destroy();
+					feature.popup = null;
+				}
+
+				map.addControl(controls['selector']);
+				controls['selector'].activate();
+				var data = await grabData();
+				// console.log(data[0].data.latitude);
+				map.addLayer(new OpenLayers.Layer.OSM());
+
+				var zoom = 16;
+
+				var markerLayer = new OpenLayers.Layer.Markers("Markers");
+				map.addLayer(markerLayer);
+
+				for (let i in data) {
+					console.log(data[i].data);
+					var lonLat = new OpenLayers.LonLat(data[i].data.longitude, data[i].data.latitude)
+						.transform(
+							new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+							map.getProjectionObject() // to Spherical Mercator Projection
+						);
+
+					var feature = new OpenLayers.Feature.Vector(
+						new OpenLayers.Geometry.Point(data[i].data.longitude, data[i].data.latitude)
+						.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()), { description: data[i].data.event_type.concat(' - ', String(data[i].data.difficulty), ' @ ', String(data[i].data.plannedDate), '-', String(data[i].data.time))});
+					vectorLayer.addFeatures(feature);
+
+					markerLayer.addMarker(new OpenLayers.Marker(lonLat));
+				}
+			}
+
+
+			// Center map based on user location
+			// function getLocation() {
+			// 	if (navigator.geolocation) {
+			// 		navigator.geolocation.getCurrentPosition(showPosition);
+			// 	} else {
+			// 		var curLonLat = new OpenLayers.LonLat(36.7783, -119.4179)
+			// 			.transform(
+			// 				new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+			// 				map.getProjectionObject() // to Spherical Mercator Projection
+			// 			);
+			// 		map.setCenter(curLonLat, 16);
+			// 	}
+			// }
+
+			// function showPosition(position) {
+			// 	var curLonLat = new OpenLayers.LonLat(position.coords.latitude, position.coords.longitude)
+			// 		.transform(
+			// 			new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+			// 			map.getProjectionObject() // to Spherical Mercator Projection
+			// 		);
+			// 	map.setCenter(curLonLat, 16);
+			// }
+
+			update();
+			//getLocation();
+		</script>
+		<script src="script.js"></script>
+
+	</body>
+
+	<footer>
+		<p style="text-align: center; bottom: 0px">&copy 2021 Daniel Liu, Karthik Mittal, Aditya Mittal, <del>Ariv Gupta</del></p>
+	</footer>
+
+</html>

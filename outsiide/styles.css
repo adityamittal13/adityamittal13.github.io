@@ -1,0 +1,47 @@
+*{
+	font-family: 'Poppins', sans-serif;
+	color: 	#4a73b1;
+}
+
+
+body {
+	margin: 0; 
+	height: 100%; 
+	overflow: hidden;
+}
+
+.background{
+	height:200px;
+	background-repeat: no-repeat;
+    background-size: 100%;
+	background-position: center;
+}
+
+.project-title {
+	text-align: center;
+	text-decoration: underline;
+	text-decoration-color: #96ceb4;
+}
+
+.mapdiv{
+	width: 75%;
+	height: 75%;
+	margin: 5px;
+}
+
+.form_container {
+    float: left;
+    width: 50%;
+}
+
+.form_button {
+  color: black;
+  border: 2px solid #4CAF50;
+  padding: 10px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
